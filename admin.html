@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>YONO GAMES A to Z — Master Admin</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--text:#172033;--muted:#7b8494;--line:#e5e9f0;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--gold:#f59e0b;--shadow:0 10px 30px rgba(17,24,39,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}.wrap{max-width:980px;margin:auto;padding:18px 14px 40px}.top{display:flex;align-items:center;justify-content:space-between;padding:10px 4px 16px;border-bottom:1px solid var(--line);margin-bottom:14px}.brand{font-size:23px;font-weight:850;letter-spacing:-.4px}.admin{font-weight:700;color:#596273}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}h1,h2,h3,p{margin-top:0}.login{max-width:720px;margin:15px auto}.login h1{font-size:25px}.label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin:0 0 6px}.input{width:100%;height:46px;border:1px solid #d9dee8;border-radius:11px;padding:0 13px;outline:none;background:#fff}.input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:11px;min-height:42px;padding:0 15px;font-weight:800}.blue{background:var(--blue);color:#fff}.green{background:var(--green);color:#fff}.red{background:#fff1f2;color:var(--red);border:1px solid #fecdd3}.gray{background:#f2f4f7;color:#344054}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.status{padding:9px 11px;border-radius:10px;font-size:12px;font-weight:700;background:#eef2ff;color:#344054}.ok{background:#dcfce7;color:#166534}.bad{background:#fee2e2;color:#991b1b}.tabs{display:flex;gap:8px;overflow:auto;margin:10px 0}.tab{white-space:nowrap}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stat{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fafbfc}.stat b{font-size:22px;display:block}.stat span{font-size:11px;color:var(--muted)}.list{display:grid;gap:8px}.app{display:grid;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:13px;padding:8px}.app img{width:46px;height:46px;object-fit:cover;border-radius:10px}.appname{font-weight:800;font-size:13px}.small{font-size:11px;color:var(--muted);margin-top:2px}.danger{color:var(--red);font-weight:700}.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}.hidden{display:none!important}.pill{display:inline-flex;padding:5px 8px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:800}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{padding:9px;border-bottom:1px solid var(--line);text-align:left}.note{font-size:11px;line-height:1.55;color:var(--muted)}.modal{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:flex-end;justify-content:center;z-index:50}.modal.show{display:flex}.sheet{width:min(720px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px 20px 0 0;padding:18px}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#172033;color:#fff;padding:11px 15px;border-radius:12px;font-size:12px;font-weight:700;display:none;z-index:100}.toast.show{display:block}@media(max-width:650px){.grid2{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.brand{font-size:18px}.app{grid-template-columns:42px 1fr}.app .actions{grid-column:2}.top{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">YONO GAMES A to Z</div><div class="admin">Admin · Baharul</div></div>
+
+  <section id="loginCard" class="card login">
+    <h1>Enter your passcode</h1>
+    <label class="label">Passcode</label>
+    <input id="passcode" class="input" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter your passcode">
+    <div style="height:10px"></div><button id="unlockBtn" class="btn blue" style="width:100%;font-size:16px">Unlock</button>
+    <p class="note" style="margin:10px 0 0">The passcode gate is a client-side convenience, not a replacement for server-side authentication.</p>
+  </section>
+
+  <div id="panel" class="hidden">
+    <section class="card">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Master Control</h2><span id="saveState" class="status">Not connected</span></div>
+      <p class="note" style="margin-top:8px">GitHub stores the live <b>apps.json</b> and <b>recovery.json</b>. The public index reads apps.json, so admin edits go live without putting the GitHub token inside index.html.</p>
+      <div class="grid2">
+        <div><label class="label">GitHub username / organization</label><input id="ghUser" class="input" placeholder="e.g. baharul91278"></div>
+        <div><label class="label">Repository name</label><input id="ghRepo" class="input" placeholder="e.g. Yono-games"></div>
+        <div><label class="label">Branch</label><input id="ghBranch" class="input" value="main"></div>
+        <div><label class="label">Apps file path</label><input id="appsPath" class="input" value="apps.json"></div>
+        <div><label class="label">Recovery file path</label><input id="recoveryPath" class="input" value="recovery.json"></div>
+        <div><label class="label">Personal Access Token</label><input id="ghToken" class="input" type="password" placeholder="github_pat_..."><div class="note">Stored only in this browser. Never paste it into index.html.</div></div>
+      </div>
+      <div class="form-actions"><button id="saveCfg" class="btn green">Save</button><button id="verifyBtn" class="btn blue">Verify GitHub</button><button id="loadBtn" class="btn blue">Load Current Apps</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Live Website Preview</h2>
+      <div class="grid2"><div><label class="label">Live site URL</label><input id="siteUrl" class="input" value="https://yonogamesdata.com/"></div><div><label class="label">Tracking endpoint (optional)</label><input id="trackEndpoint" class="input" placeholder="https://your-free-endpoint.example/track"></div><div><label class="label">Tracking admin key (private)</label><input id="trackAdminKey" class="input" type="password" placeholder="your-private-report-key"></div></div>
+      <div class="form-actions"><button id="openSite" class="btn blue">Open Live Preview</button><button id="saveTracking" class="btn green">Save & Publish Tracking</button></div>
+      <p class="note">For true cross-user live statistics, configure a small backend/analytics endpoint. A static GitHub Pages site cannot securely write shared private statistics by itself.</p>
+    </section>
+
+    <section class="card">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Download Click Control</h2><span class="pill">5-month window</span></div>
+      <div class="stats" style="margin-top:12px"><div class="stat"><b id="totalClicks">0</b><span>Total clicks</span></div><div class="stat"><b id="todayClicks">0</b><span>Today</span></div><div class="stat"><b id="uniqueUsers">0</b><span>Unique browser IDs</span></div><div class="stat"><b id="activeApps">0</b><span>Apps clicked</span></div></div>
+      <div class="tabs"><button id="refreshStats" class="btn gray tab">Refresh Local</button><button id="loadLiveStats" class="btn blue tab">Load Live Stats</button><button id="clearLocal" class="btn red tab">Clear local stats</button></div>
+      <div id="statsTableWrap"></div>
+    </section>
+
+    <section class="card">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Add New App</h2><span id="countPill" class="pill">0 apps</span></div>
+      <div class="grid2" style="margin-top:10px"><div><label class="label">Image URL</label><input id="newImage" class="input" placeholder="https://..."></div><div><label class="label">Image name</label><input id="newName" class="input" placeholder="e.g. YONO SLOTS"></div><div><label class="label">App URL</label><input id="newLink" class="input" placeholder="https://..."></div></div>
+      <div class="form-actions"><button id="addBtn" class="btn blue">Add & Save Live</button></div>
+    </section>
+
+    <section class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Apps Live Now</h2><button id="publishBtn" class="btn green">Atomic Publish</button></div><div id="appsList" class="list" style="margin-top:12px"></div></section>
+    <section class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Recently Removed</h2><span class="note">Recovery keeps the original data.</span></div><div id="recoveryList" class="list" style="margin-top:12px"></div></section>
+  </div>
+</div>
+
+<div id="modal" class="modal"><div class="sheet"><div class="row" style="justify-content:space-between"><h2>Edit App</h2><button id="closeModal" class="btn gray">✕</button></div><input id="editId" type="hidden"><label class="label">Image URL</label><input id="editImage" class="input"><label class="label" style="margin-top:10px">Image name</label><input id="editName" class="input"><label class="label" style="margin-top:10px">App URL</label><input id="editLink" class="input"><div class="form-actions"><button id="saveEdit" class="btn blue">Save & Publish</button></div></div></div>
+<div id="toast" class="toast"></div>
+<script>
+const PASS_HASH='71cf998a5d43ae08e39b52ef6050ef0390f12f7e3a566f2438c287b82b2ee029';
+const LS='yono_master_admin_v1';
+let apps=[],removed=[],shaApps=null,shaRecovery=null;
+const $=id=>document.getElementById(id);
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
+async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+$('unlockBtn').onclick=async()=>{if(await sha($('passcode').value)!==PASS_HASH){toast('Incorrect passcode');return}$('loginCard').classList.add('hidden');$('panel').classList.remove('hidden');loadCfg()};
+$('passcode').addEventListener('keydown',e=>{if(e.key==='Enter')$('unlockBtn').click()});
+function cfg(){return{user:$('ghUser').value.trim(),repo:$('ghRepo').value.trim(),branch:$('ghBranch').value.trim()||'main',appsPath:$('appsPath').value.trim()||'apps.json',recoveryPath:$('recoveryPath').value.trim()||'recovery.json',token:$('ghToken').value.trim()}}
+function saveLocal(){const c=cfg();localStorage.setItem(LS,JSON.stringify({...c,token:c.token}));$('saveState').textContent='Saved in browser';$('saveState').className='status ok'}
+function loadCfg(){try{const c=JSON.parse(localStorage.getItem(LS)||'{}');for(const [id,k] of [['ghUser','user'],['ghRepo','repo'],['ghBranch','branch'],['appsPath','appsPath'],['recoveryPath','recoveryPath'],['ghToken','token']])if(c[k]!=null)$(id).value=c[k]}catch(e){} $('siteUrl').value=localStorage.getItem('yono_site_url')||'https://yonogamesdata.com/';$('trackEndpoint').value=localStorage.getItem('yono_tracking_endpoint')||'';$('trackAdminKey').value=localStorage.getItem('yono_tracking_admin_key')||''}
+$('saveCfg').onclick=()=>{saveLocal();toast('Settings saved')};
+function headers(){const c=cfg();return{Authorization:'Bearer '+c.token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}}
+function apiBase(){const c=cfg();return `https://api.github.com/repos/${encodeURIComponent(c.user)}/${encodeURIComponent(c.repo)}`}
+async function gh(path,opts={}){const r=await fetch(apiBase()+path,{...opts,headers:{...headers(),...(opts.headers||{})}});if(!r.ok)throw new Error((await r.text()).slice(0,240));return r.json()}
+$('verifyBtn').onclick=async()=>{try{saveLocal();const r=await gh('');$('saveState').textContent='GitHub verified';$('saveState').className='status ok';toast('Repository connected: '+r.full_name)}catch(e){$('saveState').textContent='GitHub error';$('saveState').className='status bad';toast('GitHub verify failed')}};
+async function getFile(path){try{return await gh('/contents/'+path+'?ref='+encodeURIComponent(cfg().branch))}catch(e){if(String(e.message).includes('404'))return null;throw e}}
+function decodeContent(x){return JSON.parse(atob(x.replace(/\n/g,'')))}
+async function loadCurrent(){try{saveLocal();const [a,r]=await Promise.all([getFile(cfg().appsPath),getFile(cfg().recoveryPath)]);if(!a)throw new Error('apps.json not found. Add the supplied apps.json first.');apps=decodeContent(a.content);shaApps=a.sha;removed=r?decodeContent(r.content):[];shaRecovery=r?.sha||null;normalize();render();toast('Loaded '+apps.length+' apps successfully.')}catch(e){toast('Load failed: '+e.message)}}
+$('loadBtn').onclick=loadCurrent;
+function normalize(){apps=apps.filter(x=>x&&x.name&&x.image&&x.link).map((x,i)=>({...x,id:i+1}));removed=removed.filter(x=>x&&x.name&&x.image&&x.link).map(x=>({...x,removedAt:x.removedAt||new Date().toISOString()}))}
+function render(){normalize();$('countPill').textContent=apps.length+' apps';$('appsList').innerHTML=apps.map(a=>`<div class="app"><img src="${esc(a.image)}" alt=""><div><div class="appname">${esc(a.name)}</div><div class="small">#${a.id} · <span class="danger">Live</span></div></div><div class="actions row"><button class="btn gray edit" data-id="${a.id}">Edit</button><button class="btn red remove" data-id="${a.id}">Remove</button></div></div>`).join('')||'<div class="note">No apps loaded.</div>';$('recoveryList').innerHTML=removed.map((a,i)=>`<div class="app"><img src="${esc(a.image)}" alt=""><div><div class="appname">${esc(a.name)}</div><div class="small">Removed · ${new Date(a.removedAt).toLocaleString()}</div></div><button class="btn green recover" data-index="${i}">Recovery</button></div>`).join('')||'<div class="note">Nothing removed.</div>';$('appsList').querySelectorAll('.edit').forEach(b=>b.onclick=()=>openEdit(Number(b.dataset.id)));$('appsList').querySelectorAll('.remove').forEach(b=>b.onclick=()=>removeApp(Number(b.dataset.id)));$('recoveryList').querySelectorAll('.recover').forEach(b=>b.onclick=()=>recoverApp(Number(b.dataset.index)))}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function openEdit(id){const a=apps.find(x=>x.id===id);if(!a)return;$('editId').value=id;$('editImage').value=a.image;$('editName').value=a.name;$('editLink').value=a.link;$('modal').classList.add('show')}
+$('closeModal').onclick=()=>$('modal').classList.remove('show');
+$('saveEdit').onclick=async()=>{const id=Number($('editId').value),a=apps.find(x=>x.id===id);if(!a)return;a.image=$('editImage').value.trim();a.name=$('editName').value.trim();a.link=$('editLink').value.trim();$('modal').classList.remove('show');render();await publish();}
+$('addBtn').onclick=async()=>{const name=$('newName').value.trim(),image=$('newImage').value.trim(),link=$('newLink').value.trim();if(!name||!image||!link){toast('Fill image URL, image name and app URL');return}apps.push({id:apps.length+1,name,image,link});$('newName').value=$('newImage').value=$('newLink').value='';render();await publish()};
+async function removeApp(id){const a=apps.find(x=>x.id===id);if(!a||!confirm('Remove '+a.name+' from the live website?'))return;apps=apps.filter(x=>x.id!==id);removed.unshift({...a,removedAt:new Date().toISOString()});render();await publish()}
+async function recoverApp(i){const a=removed[i];if(!a)return;apps.push({id:apps.length+1,name:a.name,image:a.image,link:a.link});removed.splice(i,1);render();await publish()}
+$('publishBtn').onclick=publish;
+async function blob(content){return gh('/git/blobs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:btoa(unescape(encodeURIComponent(content))),encoding:'base64'})})}
+async function publish(){try{saveLocal();normalize();const c=cfg();if(!c.user||!c.repo||!c.token)throw new Error('GitHub settings are incomplete');const ref=await gh('/git/ref/heads/'+encodeURIComponent(c.branch));const baseCommit=ref.object.sha;const commit=await gh('/git/commits/'+baseCommit);const treeBase=commit.tree.sha;const cfgData={siteName:'YONO GAMES Data',appsPath:c.appsPath,recoveryPath:c.recoveryPath,trackingEndpoint:$('trackEndpoint').value.trim(),trackingAdminKey:'',siteUrl:$('siteUrl').value.trim()};const appsBlob=await blob(JSON.stringify(apps,null,2)+'\n');const recBlob=await blob(JSON.stringify(removed,null,2)+'\n');const cfgBlob=await blob(JSON.stringify(cfgData,null,2)+'\n');const tree=await gh('/git/trees',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({base_tree:treeBase,tree:[{path:c.appsPath,mode:'100644',type:'blob',sha:appsBlob.sha},{path:c.recoveryPath,mode:'100644',type:'blob',sha:recBlob.sha},{path:'site-config.json',mode:'100644',type:'blob',sha:cfgBlob.sha}]})});const newCommit=await gh('/git/commits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'Admin: atomic live directory update',tree:tree.sha,parents:[baseCommit]})});await gh('/git/refs/heads/'+encodeURIComponent(c.branch),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({sha:newCommit.sha,force:false})});$('saveState').textContent='Published live';$('saveState').className='status ok';toast('Atomic publish complete');}catch(e){toast('Publish failed: '+e.message)}}
+function localEvents(){try{return JSON.parse(localStorage.getItem('yono_download_events')||'[]')}catch(e){return[]}}
+async function loadLiveStats(){const endpoint=$('trackEndpoint').value.trim(),key=$('trackAdminKey').value.trim();if(!endpoint||!key){toast('Add tracking endpoint and private admin key first');return}try{const r=await fetch(endpoint+'?key='+encodeURIComponent(key),{cache:'no-store'});const data=await r.json();if(!data.ok)throw new Error(data.error||'Live stats error');const ev=(data.events||[]).map(x=>({appId:x.appId,appName:x.appName,userId:x.userId,ts:x.timestamp instanceof Object&&x.timestamp.toISOString?x.timestamp.toISOString():String(x.timestamp)}));renderEventStats(ev,true);toast('Live stats loaded')}catch(e){toast('Live stats failed: '+e.message)}}
+function renderEventStats(ev,remote){const cut=Date.now()-15552000000;const kept=ev.filter(x=>new Date(x.ts).getTime()>=cut);const today=new Date().toISOString().slice(0,10),users=new Set(kept.map(x=>x.userId));const by={},daily={},userApp={};kept.forEach(x=>{const n=x.appName||('App '+x.appId);by[n]=(by[n]||0)+1;const d=x.ts.slice(0,10);daily[d]=(daily[d]||0)+1;const uk=(x.userId||'anonymous')+'|||'+n;userApp[uk]=(userApp[uk]||0)+1});$('totalClicks').textContent=kept.length;$('todayClicks').textContent=kept.filter(x=>x.ts.slice(0,10)===today).length;$('uniqueUsers').textContent=users.size;$('activeApps').textContent=Object.keys(by).length;let html='<table class=\"table\"><thead><tr><th>App</th><th>Clicks</th><th>Share</th></tr></thead><tbody>'+Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<tr><td>${esc(n)}</td><td>${c}</td><td>${kept.length?Math.round(c/kept.length*100)+'%':'0%'}</td></tr>`).join('')+'</tbody></table>';html+='<h3 style=\"margin:16px 0 8px\">Daily · 5 months</h3><table class=\"table\"><thead><tr><th>Date</th><th>Clicks</th></tr></thead><tbody>'+Object.entries(daily).sort((a,b)=>b[0].localeCompare(a[0])).map(([d,c])=>`<tr><td>${d}</td><td>${c}</td></tr>`).join('')+'</tbody></table>';html+='<h3 style=\"margin:16px 0 8px\">User × App</h3><table class=\"table\"><thead><tr><th>User ID</th><th>App</th><th>Clicks</th></tr></thead><tbody>'+Object.entries(userApp).sort((a,b)=>b[1]-a[1]).slice(0,300).map(([k,c])=>{const [u,n]=k.split('|||');return `<tr><td>${esc(u.slice(0,18))}</td><td>${esc(n)}</td><td>${c}</td></tr>`}).join('')+'</tbody></table>';if(remote)html='<div class=\"status ok\" style=\"margin-bottom:10px\">Live server history loaded · 180 days</div>'+html;$('statsTableWrap').innerHTML=html}
+function renderStats(){renderEventStats(localEvents(),false)}
+$('refreshStats').onclick=renderStats;$('loadLiveStats').onclick=loadLiveStats;$('clearLocal').onclick=()=>{if(confirm('Clear local browser click history?')){localStorage.removeItem('yono_download_events');renderStats();toast('Local stats cleared')}};$('saveTracking').onclick=async()=>{localStorage.setItem('yono_tracking_endpoint',$('trackEndpoint').value.trim());localStorage.setItem('yono_site_url',$('siteUrl').value.trim());localStorage.setItem('yono_tracking_admin_key',$('trackAdminKey').value.trim());await publish()};$('openSite').onclick=()=>window.open($('siteUrl').value.trim()||'https://yonogamesdata.com/','_blank');
+renderStats();
+</script>
+</body></html>
