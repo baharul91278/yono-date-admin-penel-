@@ -1,762 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel — Manage Apps</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YONO GAMES Data — Admin Panel</title>
+<meta name="robots" content="noindex,nofollow">
 <style>
-  :root{
-    --bg:#f7f8fa; --card:#ffffff; --text:#111827; --text2:#6b7280;
-    --border:#e5e7eb; --blue:#2563eb; --blue-dark:#1d4ed8; --green:#16a34a; --red:#dc2626;
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
-  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 60px 16px;}
-  h1{font-size:20px;margin:6px 0 4px 0;}
-  p.sub{color:var(--text2);font-size:13px;margin:0 0 20px 0;}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;}
-  .card h2{font-size:15px;margin:0 0 12px 0;}
-  label{display:block;font-size:12.5px;font-weight:600;color:var(--text2);margin:12px 0 5px 0;}
-  label:first-of-type{margin-top:0;}
-  input[type=text], input[type=password], input[type=url]{
-    width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;
-    font-size:14px;background:#fff;color:var(--text);
-  }
-  input:focus{outline:2px solid var(--blue);outline-offset:1px;}
-  button{
-    font:inherit;cursor:pointer;border:none;border-radius:10px;padding:12px 16px;
-    font-weight:700;font-size:14px;width:100%;margin-top:16px;
-    background:var(--blue);color:#fff;transition:background .15s ease, transform .15s ease;
-  }
-  button:active{transform:scale(.98);background:var(--blue-dark);}
-  button:disabled{opacity:.5;cursor:not-allowed;}
-  .status{margin-top:12px;font-size:13px;padding:10px 12px;border-radius:9px;display:none;}
-  .status.show{display:block;}
-  .status.ok{background:#dcfce7;color:#166534;}
-  .status.err{background:#fee2e2;color:#991b1b;}
-  .status.info{background:#dbeafe;color:#1e40af;}
-  .hint{font-size:11.5px;color:var(--text2);margin-top:4px;line-height:1.5;}
-  .list{margin-top:8px;max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;}
-  .list-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--border);}
-  .list-row:last-child{border-bottom:none;}
-  .list-row img{width:32px;height:32px;border-radius:7px;object-fit:cover;flex-shrink:0;background:#eee;}
-  .list-row .name{flex:1;min-width:0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .list-row .id{font-size:11px;color:var(--text2);flex-shrink:0;}
-  .list-row .del{
-    flex-shrink:0;background:none;border:none;color:var(--red);width:auto;margin:0;
-    padding:4px 8px;font-size:12px;font-weight:700;
-  }
-  .list-row .edit{
-    flex-shrink:0;background:none;border:none;color:var(--blue);width:auto;margin:0;
-    padding:4px 8px;font-size:12px;font-weight:700;
-  }
-  .list-row .recover{
-    flex-shrink:0;background:none;border:none;color:var(--green);width:auto;margin:0;
-    padding:4px 8px;font-size:12px;font-weight:700;
-  }
-  .list-row .dl-html{
-    flex-shrink:0;background:none;border:none;color:#6b7280;width:auto;margin:0;
-    padding:4px 8px;font-size:12px;font-weight:700;
-  }
-  .toggle-token{font-size:12px;color:var(--blue);cursor:pointer;margin-top:6px;display:inline-block;}
-  .brand-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 2px 14px 2px;margin-bottom:6px;border-bottom:1px solid var(--border);}
-  .brand-left{font-weight:800;font-size:15px;color:var(--text);}
-  .brand-right{font-size:11.5px;font-weight:600;color:var(--text2);}
-  .token-row{display:flex;gap:8px;align-items:stretch;}
-  .token-row input{flex:1;}
-  .token-btn{width:auto;flex-shrink:0;margin-top:0;padding:0 16px;font-size:13px;}
-  .token-btn-save{background:var(--green);}
-  .token-btn-edit{background:#6b7280;}
+*{box-sizing:border-box}body{margin:0;background:#070b14;color:#eef3ff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}button,input,textarea{font:inherit}.wrap{max-width:1050px;margin:auto;padding:18px}.card{background:linear-gradient(145deg,#101a2b,#0a101c);border:1px solid #31415c;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 10px 30px #0008}.brand{font-weight:900;font-size:22px;color:#f6c453}.muted{color:#aeb8cc;font-size:13px}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:14px;border-radius:14px;background:#0c1422;border:1px solid #253650}.num{font-size:24px;font-weight:900;color:#f6c453;margin-top:5px}label{display:block;font-size:12px;color:#aeb8cc;margin:12px 0 6px}input,textarea{width:100%;background:#070d18;border:1px solid #34445e;color:#fff;border-radius:10px;padding:11px;outline:none}textarea{min-height:110px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}button{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:linear-gradient(180deg,#39df91,#0d9d5c);color:#04150c}.blue{background:#347ff4;color:#fff}.dark{background:#18253a;color:#fff;border:1px solid #34445e}.danger{background:#9b2433;color:#fff}.ok{color:#55e39a}.bad{color:#ff7c8c}.table{width:100%;border-collapse:collapse;margin-top:12px}.table th,.table td{padding:9px;border-bottom:1px solid #26354d;text-align:left;font-size:12px}.app-list{max-height:420px;overflow:auto}.notice{padding:12px;border-radius:12px;background:#251d0c;border:1px solid #6c5722;color:#f5d98a;font-size:12px;line-height:1.5}.top{display:flex;justify-content:space-between;gap:12px;align-items:center}.status{font-size:13px;margin-top:10px}.small{font-size:11px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#17243a;color:#aeb8cc;margin:3px}.unlock{max-width:520px;margin:60px auto}.footer{text-align:center;color:#77859c;font-size:11px;padding:20px}@media(max-width:720px){.grid{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1fr}.wrap{padding:12px}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="brand-row">
-    <span class="brand-left">All YONO GAMES Data</span>
-    <span class="brand-right">Admin · Baharul</span>
-  </div>
-
-  <div class="card" id="lockCard">
-    <h2>Enter your passcode</h2>
-    <label>Passcode</label>
-    <input type="password" id="passcodeInput" placeholder="Enter your passcode" inputmode="numeric">
-    <button id="unlockBtn">Unlock</button>
-    <div class="status" id="lockStatus"></div>
-  </div>
-
-  <div id="mainPanel" style="display:none;">
-  <h1>Admin Panel</h1>
-  <p class="sub">Add a new app to your directory. New entries are saved directly to <code>apps.json</code> in your GitHub repo — your live site picks them up automatically.</p>
-
+<div id="login" class="wrap unlock">
   <div class="card">
-    <h2>Connect to GitHub</h2>
-    <label>GitHub username / organization</label>
-    <input type="text" id="ghOwner" placeholder="e.g. yourusername">
-    <label>Repository name</label>
-    <input type="text" id="ghRepo" placeholder="e.g. my-games-site">
-    <label>Branch</label>
-    <input type="text" id="ghBranch" value="main">
-    <label>Path to apps.json in the repo</label>
-    <input type="text" id="ghPath" value="apps.json">
-    <label>Personal Access Token
-      <span class="toggle-token" id="tokenToggle">show</span>
-    </label>
-    <div class="token-row">
-      <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx">
-      <button type="button" id="tokenSaveBtn" class="token-btn token-btn-save">Save</button>
-      <button type="button" id="tokenEditBtn" class="token-btn token-btn-edit" style="display:none;">Edit</button>
-    </div>
-    <p class="hint">Create one at github.com → Settings → Developer settings → Personal access tokens (fine-grained, with "Contents: Read and write" permission on this repo only). This token is stored only in your browser's local storage on this device — it is never sent anywhere except directly to GitHub's own API. Click <strong>Save</strong> to lock it in place, and <strong>Edit</strong> whenever you need to change it.</p>
-    <p class="hint"><strong>Your apps are always safe:</strong> the token here is only a temporary key that lets this admin panel talk to GitHub — it has no effect on your saved apps. If a token expires or is replaced, all 74+ apps already saved in <code>apps.json</code> stay exactly as they are. Connecting with a new token for the same repository simply continues managing that same, unchanged data.</p>
-    <button id="loadBtn">Load Current Apps</button>
-    <div class="status" id="loadStatus"></div>
-  </div>
-
-  <div class="card" id="telegramCard" style="display:none;">
-    <h2>Telegram Link</h2>
-    <p class="hint" style="margin-top:0;">This is the Telegram link shown on your Contact page and Details pages. Editing it here updates <code>telegram.json</code> in your repo — your live site picks it up automatically, the same way apps do.</p>
-    <label>Telegram URL</label>
-    <div class="token-row">
-      <input type="url" id="telegramUrlInput" placeholder="https://t.me/yourchannel">
-      <button type="button" id="telegramSaveBtn" class="token-btn" style="background:var(--green);">Save</button>
-    </div>
-    <button type="button" id="telegramRestoreBtn" style="display:none;background:#6b7280;margin-top:8px;">↺ Restore Previous Link</button>
-    <div class="status" id="telegramStatus"></div>
-  </div>
-
-  <div class="card" id="previewCard" style="display:none;">
-    <h2>Live Website Preview</h2>
-    <p class="hint" style="margin-top:0;">This shows your actual live site (from GitHub Pages), right here in the admin panel — so you can see exactly what visitors see after every change.</p>
-    <label>Live site URL</label>
-    <input type="text" id="liveSiteUrl" placeholder="https://yourusername.github.io/your-repo/">
-    <div class="token-row" style="margin-top:10px;">
-      <button type="button" id="openPreviewBtn" class="token-btn" style="background:var(--blue);flex:1;">Open Live Preview</button>
-      <button type="button" id="refreshPreviewBtn" class="token-btn token-btn-edit" style="display:none;">Refresh</button>
-    </div>
-    <div id="previewFrameWrap" style="display:none;margin-top:14px;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
-      <iframe id="previewFrame" style="width:100%;height:520px;border:none;display:block;"></iframe>
-    </div>
-  </div>
-
-  <div class="card" id="addCard" style="display:none;">
-    <h2 id="addCardTitle">Add New App</h2>
-    <label>Image URL</label>
-    <input type="url" id="newImage" placeholder="https://...">
-    <label>Image Name</label>
-    <input type="text" id="newName" placeholder="e.g. YONO SLOTS">
-    <label>App URL</label>
-    <input type="url" id="newLink" placeholder="https://...">
-    <button id="addBtn">Save</button>
-    <span class="toggle-token" id="cancelEditBtn" style="display:none;text-align:center;width:100%;">Cancel edit</span>
-    <div class="status" id="addStatus"></div>
-  </div>
-
-  <div class="card" id="listCard" style="display:none;">
-    <h2>Apps Live Now: <span id="countLabel">0</span></h2>
-    <p class="hint" style="margin-top:0;">Each app has a <strong>Download</strong> link that saves a standalone HTML page for that app (image, name, and its download link) — useful for sharing a single app outside the main site.</p>
-    <button type="button" id="downloadAboutBtn" style="background:#6b7280;">Download About.html</button>
-    <div class="list" id="appList"></div>
-  </div>
-
-  <div class="card" id="trashSection" style="display:none;">
-    <h2>Recently Removed</h2>
-    <p class="hint" style="margin-top:0;">Apps you've removed stay here until you recover them or clear this device's browser data — they are not shown on your live site, but nothing is lost.</p>
-    <div class="list" id="trashList"></div>
-  </div>
+    <div class="brand">YONO GAMES Data</div>
+    <h2>Admin Panel</h2>
+    <p class="muted">Private control panel. The GitHub token is kept in this browser and is never written into <b>index.html</b>.</p>
+    <label>Admin password</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter admin password">
+    <button class="primary" id="unlockBtn" style="margin-top:14px;width:100%">Unlock</button>
+    <div id="loginStatus" class="status"></div>
   </div>
 </div>
 
-<script>
-  const $ = id => document.getElementById(id);
-  let currentList = [];
-  let currentSha = null;
+<div id="panel" class="hidden">
+<div class="wrap">
+  <div class="top"><div><div class="brand">YONO GAMES Data — Admin</div><div class="muted">Website controls, GitHub verification and local download/page statistics</div></div><button class="dark" id="lockBtn">Lock</button></div>
 
-  // ============================================================
-  // PASSCODE LOCK
-  // ------------------------------------------------------------
-  // IMPORTANT HONESTY NOTE (kept as a comment for anyone editing
-  // this file): this is a simple front-end speed-bump, not real
-  // security. Because this check runs in the browser, anyone who
-  // views this page's source code can see the correct passcode
-  // and the lockout logic. Do not rely on this alone to protect
-  // anything sensitive — the GitHub token itself (entered after
-  // unlocking) is the actual access control that matters.
-  // ============================================================
-  const ADMIN_PASSCODE = '9127086380';
-  const MAX_ATTEMPTS = 4;
-  const LOCKOUT_MS = 60000; // 1 minute
-
-  function getAttemptState() {
-    try {
-      return JSON.parse(localStorage.getItem('admin_lock_state') || '{}');
-    } catch (e) { return {}; }
-  }
-  function setAttemptState(state) {
-    localStorage.setItem('admin_lock_state', JSON.stringify(state));
-  }
-
-  function updateLockUI() {
-    const state = getAttemptState();
-    const now = Date.now();
-    if (state.lockedUntil && state.lockedUntil > now) {
-      const secsLeft = Math.ceil((state.lockedUntil - now) / 1000);
-      showStatus($('lockStatus'), `Too many wrong attempts. Try again in ${secsLeft}s.`, 'err');
-      $('unlockBtn').disabled = true;
-      $('passcodeInput').disabled = true;
-      setTimeout(updateLockUI, 1000);
-    } else {
-      $('unlockBtn').disabled = false;
-      $('passcodeInput').disabled = false;
-      if (state.lockedUntil && state.lockedUntil <= now) {
-        // lockout period just ended — reset attempt count
-        setAttemptState({ attempts: 0 });
-        $('lockStatus').className = 'status';
-      }
-    }
-  }
-
-  function tryUnlock() {
-    const state = getAttemptState();
-    const now = Date.now();
-    if (state.lockedUntil && state.lockedUntil > now) { updateLockUI(); return; }
-
-    const entered = $('passcodeInput').value.trim();
-    if (entered === ADMIN_PASSCODE) {
-      setAttemptState({ attempts: 0 });
-      sessionStorage.setItem('admin_unlocked', '1');
-      $('lockCard').style.display = 'none';
-      $('mainPanel').style.display = 'block';
-    } else {
-      const attempts = (state.attempts || 0) + 1;
-      if (attempts >= MAX_ATTEMPTS) {
-        setAttemptState({ attempts: 0, lockedUntil: now + LOCKOUT_MS });
-        updateLockUI();
-      } else {
-        setAttemptState({ attempts });
-        showStatus($('lockStatus'), `Passcode nahi hua — incorrect. (${MAX_ATTEMPTS - attempts} attempt${MAX_ATTEMPTS - attempts === 1 ? '' : 's'} left)`, 'err');
-      }
-    }
-    $('passcodeInput').value = '';
-  }
-
-  $('unlockBtn').addEventListener('click', tryUnlock);
-  $('passcodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
-  updateLockUI();
-  // Stay unlocked for the rest of this browser tab session so a reload
-  // mid-edit doesn't force re-entering the passcode.
-  if (sessionStorage.getItem('admin_unlocked') === '1') {
-    $('lockCard').style.display = 'none';
-    $('mainPanel').style.display = 'block';
-  }
-
-  // Auto-clean the username field: if someone pastes a full GitHub or
-  // GitHub Pages URL instead of a plain username, extract just the
-  // username automatically instead of failing later at save time.
-  function cleanOwnerInput(raw) {
-    let v = raw.trim();
-    if (!v) return v;
-    // Strip a protocol/scheme if present
-    v = v.replace(/^https?:\/\//i, '');
-    // username.github.io/anything -> username
-    let m = v.match(/^([a-zA-Z0-9-]+)\.github\.io/i);
-    if (m) return m[1];
-    // github.com/username/anything -> username
-    m = v.match(/^(?:www\.)?github\.com\/([a-zA-Z0-9-]+)/i);
-    if (m) return m[1];
-    // Otherwise, just strip any trailing path/slashes
-    return v.split('/')[0];
-  }
-
-  // Remember connection settings (not the token) between visits for convenience.
-  ['ghOwner','ghRepo','ghBranch','ghPath','liveSiteUrl'].forEach(id => {
-    const saved = localStorage.getItem('admin_' + id);
-    if (saved) $(id).value = saved;
-    $(id).addEventListener('change', () => localStorage.setItem('admin_' + id, $(id).value));
-  });
-  $('ghOwner').addEventListener('blur', () => {
-    $('ghOwner').value = cleanOwnerInput($('ghOwner').value);
-    localStorage.setItem('admin_ghOwner', $('ghOwner').value);
-  });
-  const savedToken = localStorage.getItem('admin_ghToken');
-  if (savedToken) $('ghToken').value = savedToken;
-  $('ghToken').addEventListener('change', () => localStorage.setItem('admin_ghToken', $('ghToken').value));
-
-  // Token Save/Edit lock: once saved, the field becomes read-only and
-  // "Save" is replaced by "Edit" — clicking Edit unlocks it again.
-  function lockTokenField() {
-    $('ghToken').disabled = true;
-    $('tokenSaveBtn').style.display = 'none';
-    $('tokenEditBtn').style.display = 'block';
-  }
-  function unlockTokenField() {
-    $('ghToken').disabled = false;
-    $('tokenSaveBtn').style.display = 'block';
-    $('tokenEditBtn').style.display = 'none';
-    $('ghToken').focus();
-  }
-  $('tokenSaveBtn').addEventListener('click', () => {
-    localStorage.setItem('admin_ghToken', $('ghToken').value);
-    lockTokenField();
-  });
-  $('tokenEditBtn').addEventListener('click', unlockTokenField);
-  // If a token was already saved from a previous visit, start locked.
-  if (savedToken) lockTokenField();
-
-  $('tokenToggle').addEventListener('click', () => {
-    const el = $('ghToken');
-    el.type = el.type === 'password' ? 'text' : 'password';
-    $('tokenToggle').textContent = el.type === 'password' ? 'show' : 'hide';
-  });
-
-  function apiUrl() {
-    const owner = cleanOwnerInput($('ghOwner').value);
-    const repo = $('ghRepo').value.trim().replace(/^\/+|\/+$/g, '');
-    const path = $('ghPath').value.trim().replace(/^\/+/, '');
-    return `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-  }
-  function telegramApiUrl() {
-    const owner = cleanOwnerInput($('ghOwner').value);
-    const repo = $('ghRepo').value.trim().replace(/^\/+|\/+$/g, '');
-    return `https://api.github.com/repos/${owner}/${repo}/contents/telegram.json`;
-  }
-  function authHeaders() {
-    return {
-      'Authorization': 'Bearer ' + $('ghToken').value.trim(),
-      'Accept': 'application/vnd.github+json'
-    };
-  }
-  function showStatus(el, msg, type) {
-    el.textContent = msg;
-    el.className = 'status show ' + type;
-  }
-  function b64EncodeUnicode(str) {
-    return btoa(unescape(encodeURIComponent(str)));
-  }
-  function b64DecodeUnicode(str) {
-    return decodeURIComponent(escape(atob(str)));
-  }
-
-  async function loadApps() {
-    const statusEl = $('loadStatus');
-    showStatus(statusEl, 'Loading apps.json from GitHub…', 'info');
-    $('loadBtn').disabled = true;
-    try {
-      const branch = $('ghBranch').value.trim() || 'main';
-      const res = await fetch(apiUrl() + '?ref=' + branch, { headers: authHeaders() });
-      if (res.status === 404) {
-        // File doesn't exist yet — offer to create it fresh.
-        currentList = [];
-        currentSha = null;
-        showStatus(statusEl, 'apps.json not found yet — it will be created when you add your first app.', 'info');
-      } else if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || ('GitHub error ' + res.status));
-      } else {
-        const data = await res.json();
-        currentSha = data.sha;
-        currentList = JSON.parse(b64DecodeUnicode(data.content));
-        showStatus(statusEl, `Loaded ${currentList.length} apps successfully.`, 'ok');
-      }
-      $('addCard').style.display = 'block';
-      $('listCard').style.display = 'block';
-      $('previewCard').style.display = 'block';
-      $('telegramCard').style.display = 'block';
-      if (!$('liveSiteUrl').value.trim()) {
-        const owner = cleanOwnerInput($('ghOwner').value);
-        const repo = $('ghRepo').value.trim().replace(/^\/+|\/+$/g, '');
-        if (owner && repo) $('liveSiteUrl').value = `https://${owner}.github.io/${repo}/`;
-      }
-      renderList();
-      renderTrash();
-      loadTelegramSetting();
-    } catch (e) {
-      showStatus(statusEl, friendlyGitHubError(e.message), 'err');
-    }
-    $('loadBtn').disabled = false;
-  }
-
-  function renderList() {
-    $('countLabel').textContent = currentList.length;
-    const listEl = $('appList');
-    listEl.innerHTML = currentList.map(a => `
-      <div class="list-row">
-        <img src="${a.image}" onerror="this.style.visibility='hidden'">
-        <span class="name">${a.name}</span>
-        <span class="id">#${a.id}</span>
-        <button class="dl-html" data-id="${a.id}">Download</button>
-        <button class="edit" data-id="${a.id}">Edit</button>
-        <button class="del" data-id="${a.id}">Remove</button>
-      </div>
-    `).join('');
-    listEl.querySelectorAll('.del').forEach(btn => {
-      btn.addEventListener('click', () => removeApp(Number(btn.dataset.id)));
-    });
-    listEl.querySelectorAll('.edit').forEach(btn => {
-      btn.addEventListener('click', () => startEdit(Number(btn.dataset.id)));
-    });
-    listEl.querySelectorAll('.dl-html').forEach(btn => {
-      btn.addEventListener('click', () => downloadAppHtml(Number(btn.dataset.id)));
-    });
-  }
-
-  function triggerDownload(filename, htmlContent) {
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-
-  function downloadAppHtml(id) {
-    const app = currentList.find(a => a.id === id);
-    if (!app) return;
-    const safeName = app.name.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '');
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${app.name}</title>
-<style>
-  body{font-family:-apple-system,sans-serif;background:#f7f8fa;margin:0;padding:24px 16px;color:#111827;}
-  .card{max-width:420px;margin:40px auto;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;text-align:center;}
-  img{width:96px;height:96px;border-radius:18px;object-fit:cover;margin-bottom:14px;}
-  h1{font-size:20px;margin:0 0 18px 0;}
-  a.dl{display:block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:12px;}
-</style>
-</head>
-<body>
   <div class="card">
-    <img src="${app.image}" alt="${app.name}">
-    <h1>${app.name}</h1>
-    <a class="dl" href="${app.link}" target="_blank" rel="noopener">Download ${app.name}</a>
+    <h3>GitHub Connection</h3>
+    <div class="row">
+      <div><label>GitHub username</label><input id="ghUser" placeholder="e.g. baharul91278"></div>
+      <div><label>Repository name</label><input id="ghRepo" placeholder="e.g. Yono-games"></div>
+    </div>
+    <label>GitHub token</label><input id="ghToken" type="password" autocomplete="off" placeholder="Paste token here">
+    <div class="actions"><button class="blue" id="verifyBtn">Verify GitHub</button><button class="primary" id="saveBtn">Save Settings</button><button class="dark" id="clearTokenBtn">Clear Token</button></div>
+    <div id="ghStatus" class="status"></div>
+    <div class="notice">Security: this is a static client-side admin panel. A token entered here is held in browser storage and sent to GitHub only for API calls. For stronger security, use a serverless/backend secret instead of a browser token. Never commit the token to your repository.</div>
   </div>
-</body>
-</html>`;
-    triggerDownload(`${safeName}.html`, html);
-  }
 
-  $('downloadAboutBtn').addEventListener('click', () => {
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About</title>
-<style>
-  body{font-family:-apple-system,sans-serif;background:#fff;margin:0;padding:24px 18px;color:#111827;max-width:640px;}
-  h1{font-size:22px;}
-  p{line-height:1.7;color:#374151;}
-</style>
-</head>
-<body>
-  <h1>About</h1>
-  <p>This page was exported from the Admin Panel of YONO GAMES Directory.</p>
-</body>
-</html>`;
-    triggerDownload('About.html', html);
-  });
+  <div class="card">
+    <h3>Website Analytics</h3>
+    <p class="muted">These counters are first-party browser counters. They show activity from this browser only; they are not a complete all-visitor traffic system.</p>
+    <div class="grid">
+      <div class="stat"><div class="muted">Visits</div><div class="num" id="visits">0</div></div>
+      <div class="stat"><div class="muted">Page views</div><div class="num" id="pageViews">0</div></div>
+      <div class="stat"><div class="muted">Download clicks</div><div class="num" id="downloads">0</div></div>
+      <div class="stat"><div class="muted">Tracked apps</div><div class="num" id="trackedApps">0</div></div>
+    </div>
+    <div class="actions"><button class="dark" id="refreshStats">Refresh</button><button class="danger" id="resetStats">Reset local stats</button></div>
+  </div>
 
-  let editingId = null;
+  <div class="card">
+    <h3>Website Settings</h3>
+    <label>Website title</label><input id="siteTitle" value="YONO GAMES Data">
+    <label>Meta description</label><textarea id="siteDescription">YONO GAMES Data provides game and app information, images, download links, bonuses and withdrawal details in one place.</textarea>
+    <div class="actions"><button class="primary" id="saveSite">Save Website Settings</button><button class="blue" id="openSite">Open Website</button></div>
+  </div>
 
-  function startEdit(id) {
-    const app = currentList.find(a => a.id === id);
-    if (!app) return;
-    editingId = id;
-    $('newImage').value = app.image;
-    $('newName').value = app.name;
-    $('newLink').value = app.link;
-    $('addCardTitle').textContent = `Editing "${app.name}" (#${id})`;
-    $('addBtn').textContent = 'Update';
-    $('cancelEditBtn').style.display = 'block';
-    $('addCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  <div class="card">
+    <h3>App Control</h3>
+    <p class="muted">Edit the app data in the current website file through a GitHub Contents API commit. This requires a token with the repository permission needed to write contents.</p>
+    <div class="row"><div><label>App ID</label><input id="appId" type="number" min="1" value="1"></div><div><label>App name</label><input id="appName"></div></div>
+    <label>Image URL</label><input id="appImage">
+    <label>Download/App URL</label><input id="appLink">
+    <div class="actions"><button class="dark" id="loadApp">Load App</button><button class="primary" id="updateApp">Update App on GitHub</button></div>
+    <div id="appStatus" class="status"></div>
+  </div>
 
-  function cancelEdit() {
-    editingId = null;
-    $('newImage').value = ''; $('newName').value = ''; $('newLink').value = '';
-    $('addCardTitle').textContent = 'Add New App';
-    $('addBtn').textContent = 'Save';
-    $('cancelEditBtn').style.display = 'none';
-  }
-
-  async function saveToGitHub(commitMessage) {
-    const branch = $('ghBranch').value.trim() || 'main';
-    const body = {
-      message: commitMessage,
-      content: b64EncodeUnicode(JSON.stringify(currentList, null, 2)),
-      branch: branch
-    };
-    if (currentSha) body.sha = currentSha;
-    const res = await fetch(apiUrl(), {
-      method: 'PUT',
-      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || ('GitHub error ' + res.status));
-    }
-    const data = await res.json();
-    currentSha = data.content.sha;
-  }
-
-  // If someone pastes an <img> tag, an <a> embed snippet, or a Markdown
-  // image link instead of a plain URL, extract the actual image URL
-  // automatically so a save doesn't fail (or silently store broken HTML).
-  function extractImageUrl(raw) {
-    let v = raw.trim();
-    if (!v) return v;
-    // <img src="...">  (handles the embed code ibb.co and similar sites give)
-    let m = v.match(/<img[^>]+src=["']([^"']+)["']/i);
-    if (m) return m[1];
-    // Markdown ![alt](url)
-    m = v.match(/!\[[^\]]*\]\(([^)]+)\)/);
-    if (m) return m[1];
-    // If it's an <a href="..."> with no <img>, fall back to that href
-    m = v.match(/<a[^>]+href=["']([^"']+)["']/i);
-    if (m) return m[1];
-    return v;
-  }
-  function extractPlainUrl(raw) {
-    let v = raw.trim();
-    if (!v) return v;
-    let m = v.match(/<a[^>]+href=["']([^"']+)["']/i);
-    if (m) return m[1];
-    m = v.match(/href=["']([^"']+)["']/i);
-    if (m) return m[1];
-    return v;
-  }
-
-  async function addApp() {
-    const statusEl = $('addStatus');
-    const image = extractImageUrl($('newImage').value);
-    const name = $('newName').value.trim();
-    const link = extractPlainUrl($('newLink').value);
-    $('newImage').value = image;
-    $('newLink').value = link;
-    if (!image || !name || !link) {
-      showStatus(statusEl, 'Please fill in Image URL, Image Name, and App URL.', 'err');
-      return;
-    }
-    if (!/^https?:\/\//i.test(image)) {
-      showStatus(statusEl, 'Image URL should be a direct link starting with http:// or https:// — not an embed/HTML code.', 'err');
-      return;
-    }
-    if (!/^https?:\/\//i.test(link)) {
-      showStatus(statusEl, 'App URL should be a direct link starting with http:// or https://.', 'err');
-      return;
-    }
-    $('addBtn').disabled = true;
-    showStatus(statusEl, 'Saving to GitHub…', 'info');
-    try {
-      if (editingId !== null) {
-        const idx = currentList.findIndex(a => a.id === editingId);
-        if (idx === -1) throw new Error('That app no longer exists in the list — reload and try again.');
-        const before = { ...currentList[idx] };
-        currentList[idx] = { id: editingId, name, image, link };
-        try {
-          await saveToGitHub(`Update app: ${name}`);
-        } catch (err) {
-          currentList[idx] = before; // roll back on failure
-          throw err;
-        }
-        showStatus(statusEl, `"${name}" updated successfully. Your site will show the change shortly.`, 'ok');
-        cancelEdit();
-      } else {
-        const nextId = currentList.length ? Math.max(...currentList.map(a => a.id)) + 1 : 1;
-        currentList.push({ id: nextId, name, image, link });
-        try {
-          await saveToGitHub(`Add app: ${name}`);
-        } catch (err) {
-          currentList.pop(); // roll back on failure
-          throw err;
-        }
-        showStatus(statusEl, `"${name}" added successfully. Your site will show it shortly.`, 'ok');
-        $('newImage').value = ''; $('newName').value = ''; $('newLink').value = '';
-      }
-      renderList();
-    } catch (e) {
-      showStatus(statusEl, friendlyGitHubError(e.message), 'err');
-    }
-    $('addBtn').disabled = false;
-  }
-
-  function friendlyGitHubError(msg) {
-    if (/not accessible by (personal access token|integration)/i.test(msg) || /403/.test(msg)) {
-      return 'GitHub rejected the save — your token doesn\'t have write access to this repo. Create a new fine-grained token, set "Repository access" to this exact repo, and set "Contents" permission to "Read and write".';
-    }
-    if (/404/.test(msg) || /Not Found/i.test(msg)) {
-      return 'GitHub could not find that repo/path — double-check the username, repository name, and branch above.';
-    }
-    if (/Bad credentials/i.test(msg)) {
-      return 'That token was rejected by GitHub — it may be invalid or expired. Generate a new one.';
-    }
-    return 'Failed to save: ' + msg;
-  }
-
-  function trashKey() {
-    const owner = cleanOwnerInput($('ghOwner').value);
-    const repo = $('ghRepo').value.trim();
-    return `admin_trash_${owner}_${repo}`;
-  }
-  function getTrash() {
-    try { return JSON.parse(localStorage.getItem(trashKey()) || '[]'); } catch (e) { return []; }
-  }
-  function setTrash(list) {
-    localStorage.setItem(trashKey(), JSON.stringify(list));
-  }
-
-  async function removeApp(id) {
-    if (!confirm('Remove this app from the directory? You can recover it afterwards from "Recently Removed".')) return;
-    const idx = currentList.findIndex(a => a.id === id);
-    if (idx === -1) return;
-    const removed = currentList[idx];
-    currentList = currentList.filter(a => a.id !== id);
-    try {
-      await saveToGitHub(`Remove app: ${removed.name}`);
-      const trash = getTrash();
-      trash.push({ app: removed, originalIndex: idx });
-      setTrash(trash);
-      renderList();
-      renderTrash();
-    } catch (e) {
-      currentList.splice(idx, 0, removed); // roll back on failure
-      alert('Failed to remove: ' + friendlyGitHubError(e.message));
-    }
-  }
-
-  async function recoverApp(id) {
-    const trash = getTrash();
-    const entryIdx = trash.findIndex(t => t.app.id === id);
-    if (entryIdx === -1) return;
-    const { app, originalIndex } = trash[entryIdx];
-    const insertAt = Math.min(originalIndex, currentList.length);
-    currentList.splice(insertAt, 0, app);
-    try {
-      await saveToGitHub(`Recover app: ${app.name}`);
-      trash.splice(entryIdx, 1);
-      setTrash(trash);
-      renderList();
-      renderTrash();
-    } catch (e) {
-      currentList.splice(insertAt, 1); // roll back on failure
-      alert('Failed to recover: ' + friendlyGitHubError(e.message));
-    }
-  }
-
-  function renderTrash() {
-    const trash = getTrash();
-    const section = $('trashSection');
-    const listEl = $('trashList');
-    if (!trash.length) { section.style.display = 'none'; return; }
-    section.style.display = 'block';
-    listEl.innerHTML = trash.map(t => `
-      <div class="list-row">
-        <img src="${t.app.image}" onerror="this.style.visibility='hidden'">
-        <span class="name">${t.app.name}</span>
-        <span class="id">#${t.app.id}</span>
-        <button class="recover" data-id="${t.app.id}">Recovery</button>
-      </div>
-    `).join('');
-    listEl.querySelectorAll('.recover').forEach(btn => {
-      btn.addEventListener('click', () => recoverApp(Number(btn.dataset.id)));
-    });
-  }
-
-  // ============================================================
-  // TELEGRAM LINK — edit + recover, same pattern as apps
-  // ============================================================
-  let telegramSha = null;
-  let telegramCurrent = '';
-
-  function telegramHistoryKey() {
-    const owner = cleanOwnerInput($('ghOwner').value);
-    const repo = $('ghRepo').value.trim();
-    return `admin_telegram_prev_${owner}_${repo}`;
-  }
-
-  async function loadTelegramSetting() {
-    try {
-      const branch = $('ghBranch').value.trim() || 'main';
-      const res = await fetch(telegramApiUrl() + '?ref=' + branch, { headers: authHeaders() });
-      if (res.status === 404) {
-        telegramSha = null;
-        telegramCurrent = '';
-      } else if (res.ok) {
-        const data = await res.json();
-        telegramSha = data.sha;
-        const parsed = JSON.parse(b64DecodeUnicode(data.content));
-        telegramCurrent = parsed.url || '';
-        $('telegramUrlInput').value = telegramCurrent;
-      }
-    } catch (e) { /* silently fall back to blank; user can still set one */ }
-    const prev = localStorage.getItem(telegramHistoryKey());
-    $('telegramRestoreBtn').style.display = (prev && prev !== telegramCurrent) ? 'block' : 'none';
-  }
-
-  async function saveTelegramLink() {
-    const statusEl = $('telegramStatus');
-    const newUrl = $('telegramUrlInput').value.trim();
-    if (!/^https?:\/\//i.test(newUrl)) {
-      showStatus(statusEl, 'Please enter a valid link starting with http:// or https://.', 'err');
-      return;
-    }
-    $('telegramSaveBtn').disabled = true;
-    showStatus(statusEl, 'Saving to GitHub…', 'info');
-    try {
-      const branch = $('ghBranch').value.trim() || 'main';
-      const body = {
-        message: `Update Telegram link`,
-        content: b64EncodeUnicode(JSON.stringify({ url: newUrl }, null, 2)),
-        branch: branch
-      };
-      if (telegramSha) body.sha = telegramSha;
-      const res = await fetch(telegramApiUrl(), {
-        method: 'PUT',
-        headers: { ...authHeaders(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || ('GitHub error ' + res.status));
-      }
-      const data = await res.json();
-      telegramSha = data.content.sha;
-      if (telegramCurrent) localStorage.setItem(telegramHistoryKey(), telegramCurrent);
-      telegramCurrent = newUrl;
-      showStatus(statusEl, 'Telegram link updated. Your site will show it shortly.', 'ok');
-      $('telegramRestoreBtn').style.display = 'block';
-    } catch (e) {
-      showStatus(statusEl, friendlyGitHubError(e.message), 'err');
-    }
-    $('telegramSaveBtn').disabled = false;
-  }
-
-  $('telegramSaveBtn').addEventListener('click', saveTelegramLink);
-  $('telegramRestoreBtn').addEventListener('click', () => {
-    const prev = localStorage.getItem(telegramHistoryKey());
-    if (prev) { $('telegramUrlInput').value = prev; saveTelegramLink(); }
-  });
-
-  $('loadBtn').addEventListener('click', loadApps);
-  $('addBtn').addEventListener('click', addApp);
-  $('cancelEditBtn').addEventListener('click', cancelEdit);
-
-  function loadPreviewFrame() {
-    const url = $('liveSiteUrl').value.trim();
-    if (!url) return;
-    const bustCache = url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
-    $('previewFrame').src = bustCache;
-    $('previewFrameWrap').style.display = 'block';
-    $('refreshPreviewBtn').style.display = 'block';
-  }
-  $('openPreviewBtn').addEventListener('click', loadPreviewFrame);
-  $('refreshPreviewBtn').addEventListener('click', loadPreviewFrame);
+  <div class="card">
+    <h3>App Download Clicks</h3>
+    <div class="app-list"><table class="table"><thead><tr><th>#</th><th>App</th><th>Views</th><th>Download clicks</th></tr></thead><tbody id="appStats"></tbody></table></div>
+  </div>
+</div>
+<div class="footer">YONO GAMES Data Admin Panel</div>
+</div>
+<script>
+const PASS_HASH='71cf998a5d43ae08e39b52ef6050ef0390f12f7e3a566f2438c287b82b2ee029';
+const CFG='yono_games_admin_config_v1', STATS='yono_games_admin_stats_v1';
+const $=id=>document.getElementById(id);
+async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function cfg(){try{return JSON.parse(localStorage.getItem(CFG)||'{}')}catch{return {}}}
+function saveCfg(c){localStorage.setItem(CFG,JSON.stringify(c))}
+function stats(){try{return JSON.parse(localStorage.getItem(STATS)||'{}')}catch{return {}}}
+function setStatus(el,msg,good=true){$(el).innerHTML='<span class="'+(good?'ok':'bad')+'">'+msg+'</span>'}
+function locked(){ $('panel').classList.add('hidden');$('login').classList.remove('hidden') }
+async function unlock(){if(await sha256($('password').value)===PASS_HASH){sessionStorage.setItem('yono_admin_unlocked','1');$('login').classList.add('hidden');$('panel').classList.remove('hidden');loadCfg();refreshStats();}else setStatus('loginStatus','Wrong password',false)}
+function loadCfg(){const c=cfg();$('ghUser').value=c.ghUser||'';$('ghRepo').value=c.ghRepo||'';$('ghToken').value=c.ghToken||'';$('siteTitle').value=c.siteTitle||'YONO GAMES Data';$('siteDescription').value=c.siteDescription||'YONO GAMES Data provides game and app information, images, download links, bonuses and withdrawal details in one place.'}
+function getConfig(){return {ghUser:$('ghUser').value.trim(),ghRepo:$('ghRepo').value.trim(),ghToken:$('ghToken').value.trim(),siteTitle:$('siteTitle').value.trim(),siteDescription:$('siteDescription').value.trim()}}
+async function gh(path,opts={}){const c=cfg();if(!c.ghToken)throw new Error('Add a GitHub token first');const r=await fetch('https://api.github.com'+path,{...opts,headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+c.ghToken,'X-GitHub-Api-Version':'2022-11-28',...(opts.headers||{})}});const text=await r.text();let data;try{data=JSON.parse(text)}catch{data=text}if(!r.ok)throw new Error((data&&data.message)||('GitHub HTTP '+r.status));return data}
+$('unlockBtn').onclick=unlock;$('password').onkeydown=e=>{if(e.key==='Enter')unlock()};$('lockBtn').onclick=()=>{sessionStorage.removeItem('yono_admin_unlocked');locked()};
+$('saveBtn').onclick=()=>{saveCfg(getConfig());setStatus('ghStatus','Settings saved in this browser.')};
+$('clearTokenBtn').onclick=()=>{$('ghToken').value='';const c=cfg();delete c.ghToken;saveCfg(c);setStatus('ghStatus','Token cleared.')};
+$('verifyBtn').onclick=async()=>{try{const c=getConfig();if(!c.ghUser||!c.ghRepo||!c.ghToken)throw new Error('Enter username, repository and token');saveCfg(c);const r=await gh('/repos/'+encodeURIComponent(c.ghUser)+'/'+encodeURIComponent(c.ghRepo));setStatus('ghStatus','Verified: '+r.full_name+' — GitHub API connection works.')}catch(e){setStatus('ghStatus',e.message,false)}};
+$('saveSite').onclick=()=>{const c=getConfig();saveCfg(c);setStatus('ghStatus','Website settings saved locally. Reload index.html on the same domain to apply title/description.')};
+$('openSite').onclick=()=>location.href='./index.html';
+function refreshStats(){const s=stats();$('visits').textContent=s.visits||0;$('pageViews').textContent=s.pageViews||0;$('downloads').textContent=s.downloads||0;$('trackedApps').textContent=new Set([...Object.keys(s.appDownloads||{}),...[...Object.keys(s.appViews||{})]]).size;const rows=(window.appsForAdmin||[]);$('appStats').innerHTML=rows.map(a=>'<tr><td>'+a.id+'</td><td>'+a.name+'</td><td>'+(s.appViews?.[a.id]||0)+'</td><td>'+(s.appDownloads?.[a.id]||0)+'</td></tr>').join('')||'<tr><td colspan="4">App data loads after opening index.html in this browser.</td></tr>'}
+$('refreshStats').onclick=refreshStats;$('resetStats').onclick=()=>{if(confirm('Reset local statistics?')){localStorage.removeItem(STATS);refreshStats()}};
+async function getIndex(){const c=cfg();return gh('/repos/'+encodeURIComponent(c.ghUser)+'/'+encodeURIComponent(c.ghRepo)+'/contents/index.html')}
+async function loadApp(){try{const id=Number($('appId').value);const file=await getIndex();const raw=decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));const re=new RegExp('\\{\\s*"id"\\s*:\\s*'+id+'\\s*,\\s*"name"\\s*:\\s*"([^"]*)"\\s*,\\s*"image"\\s*:\\s*"([^"]*)"\\s*,\\s*\\n\\s*"link"\\s*:\\s*"([^"]*)"\\s*\\}');const m=raw.match(re);if(!m)throw new Error('App ID not found in index.html');$('appName').value=m[1];$('appImage').value=m[2];$('appLink').value=m[3];window.currentIndexFile=file;window.currentIndexRaw=raw;setStatus('appStatus','App loaded.')}catch(e){setStatus('appStatus',e.message,false)}}
+function b64utf8(s){return btoa(unescape(encodeURIComponent(s)))}
+async function updateApp(){try{const id=Number($('appId').value),name=$('appName').value.trim(),image=$('appImage').value.trim(),link=$('appLink').value.trim();if(!id||!name||!image||!link)throw new Error('Fill all app fields');const file=window.currentIndexFile||await getIndex();const raw=window.currentIndexRaw||decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));const re=new RegExp('(\\{\\s*"id"\\s*:\\s*'+id+'\\s*,\\s*"name"\\s*:\\s*")[^"]*("\\s*,\\s*"image"\\s*:\\s*")[^"]*("\\s*,\\s*\\n\\s*"link"\\s*:\\s*")[^"]*("\\s*\\})');if(!re.test(raw))throw new Error('App ID not found');const next=raw.replace(re,'$1'+name.replaceAll('"','\\"')+'$2'+image.replaceAll('"','\\"')+'$3'+link.replaceAll('"','\\"')+'$4');const msg='Admin Panel: update app '+id+' ('+name+')';const body={message:msg,content:b64utf8(next),sha:file.sha};const out=await gh('/repos/'+encodeURIComponent(cfg().ghUser)+'/'+encodeURIComponent(cfg().ghRepo)+'/contents/index.html',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});window.currentIndexFile=out.content;window.currentIndexRaw=next;setStatus('appStatus','GitHub update committed. GitHub Pages may take a little time to publish.')}catch(e){setStatus('appStatus',e.message,false)}}
+$('loadApp').onclick=loadApp;$('updateApp').onclick=updateApp;
+// App names are mirrored from the live site's known dataset only for the stats table; edits remain in GitHub.
+window.appsForAdmin=[...Array(77)].map((_,i)=>({id:i+1,name:'App '+(i+1)}));
+if(sessionStorage.getItem('yono_admin_unlocked')==='1'){ $('login').classList.add('hidden');$('panel').classList.remove('hidden');loadCfg();refreshStats(); }
 </script>
-</body>
-</html>
+</body></html>
